@@ -1,0 +1,12 @@
+{
+	"name": "CookieManager",
+	"version": "0.0.1",
+	"manifest_version": 2,
+	"description": "This extension provides an easy way to manage cookies.",
+	"permissions": ["cookies", "*://*/*"],
+	"browser_action": {
+		"default_icon": "/src/img/trash.ico",
+		"default_title": "CookieManager",
+		"default_popup": "/src/html/list.html"
+	}
+}
