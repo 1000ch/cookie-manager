@@ -92,13 +92,17 @@ var CookieView = (function() {
 	_CookieView.prototype.get = function() {
 		var shownDomain = [];
 		var html = "";
-		nativeForEach.call(this.cookieCollection.collection, function(cookieEntity) {
+		this.cookieCollection.collection.forEach(function(cookieEntity) {
 			if(shownDomain.indexOf(cookieEntity.domain) == -1) {
 				shownDomain.push(cookieEntity.domain);
 				html += 
-					"<tr id='" + cookieEntity.cookieId +  "'>" +
-						"<td style='word-break: break-all;'>" + cookieEntity.domain + "</td>" +
-						"<td>" + "<button class='btn' data-cookie-domain='" + cookieEntity.domain + "'>DELETE</button>" + "</td>" +
+					"<tr id='" + cookieEntity.domain +  "'>" +
+						"<td style='word-break: break-all;'>" + 
+							cookieEntity.domain + 
+						"</td>" +
+						"<td>" + 
+							"<button class='btn' data-cookie-domain='" + cookieEntity.domain + "'>DELETE</button>" + 
+						"</td>" +
 					"</tr>";
 			}
 			
@@ -175,7 +179,7 @@ $(document).ready(function() {
 	btn.parents("tr").remove();
 
 	//remove cookies related with domain
-	nativeForEach.call(clickedCookieEntityArray, function(clickedCookieEntity) {
+	clickedCookieEntityArray.forEach(function(clickedCookieEntity) {
 		CookieAccessObject.remove(clickedCookieEntity, function(details) {
 			console.log(details);
 		});
