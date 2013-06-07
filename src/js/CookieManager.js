@@ -21,6 +21,37 @@ var generateUniqueId = (function() {
 	};
 })();
 
+/**
+ * throttle 
+ * @description borrowed from UnderscoreJS
+ * @param {Function} func
+ * @param {Number} wait
+ */
+function throttle(fn, wait) {
+	var context, args, timeout, result;
+	var previous = 0;
+	var later = function() {
+		previous = new Date;
+		timeout = null;
+		result = fn.apply(context, args);
+	};
+	return function() {
+		var now = new Date;
+		var remaining = wait - (now - previous);
+		context = this;
+		args = arguments;
+		if (remaining <= 0) {
+			clearTimeout(timeout);
+			timeout = null;
+			previous = now;
+			result = fn.apply(context, args);
+		} else if (!timeout) {
+			timeout = setTimeout(later, remaining);
+		}
+		return result;
+	};
+}
+
 var CookieEntity = (function() {
 	/**
 	 * CookieEntity
@@ -194,7 +225,7 @@ $(document).ready(function() {
 		alert.html(clickedDomain + " cookies have been removed successfully.");
 	});
 
-	search.on("keyup", function() {
+	search.on("keyup", throttle(function() {
 		var word = $(this).val();
 		var rows = container.find("tr");
 		rows.each(function() {
@@ -205,7 +236,7 @@ $(document).ready(function() {
 				$(this).show();
 			}
 		});
-	});
+	}, 500));
 });
 
 })();
