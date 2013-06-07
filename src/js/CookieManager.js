@@ -4,42 +4,49 @@
  *
  * Copyright 1000ch<http://1000ch.net/>
  */
+(function() {
 
 //cache
 var nativeForEach = [].forEach;
 var nativeSlice = [].slice;
 
-/**
- * CookieEntity
- * @param {Cookie} cookie
- */
-var CookieEntity = function(cookie) {
-	this.cookieId = generateUniqueId();
-	this.name = cookie.name;
-	this.value = cookie.value;
-	this.domain = cookie.domain;
-	this.hostOnly = cookie.hostOnly;
-	this.path = cookie.path;
-	this.secure = cookie.secure;
-	this.httpOnly = cookie.httpOnly;
-	this.session = cookie.session;
-	this.expirationDate = cookie.expirationDate;
-	this.storeId = cookie.storeId;
-};
-CookieEntity.prototype.url = function() {
-	return "http" + (this.secure ? "s" : "") + "://" + this.domain + this.path;
-};
-/**
- * CookieCollection
- * @param {CookieCollection} collection
- */
-var CookieCollection = function(collection) {
-	this.collection = nativeSlice.call(collection);
+var CookieEntity = (function() {
+	/**
+	 * CookieEntity
+	 * @param {Cookie} cookie
+	 */
+	var _CookieEntity = function(cookie) {
+		this.cookieId = generateUniqueId();
+		this.name = cookie.name;
+		this.value = cookie.value;
+		this.domain = cookie.domain;
+		this.hostOnly = cookie.hostOnly;
+		this.path = cookie.path;
+		this.secure = cookie.secure;
+		this.httpOnly = cookie.httpOnly;
+		this.session = cookie.session;
+		this.expirationDate = cookie.expirationDate;
+		this.storeId = cookie.storeId;
+	};
+	_CookieEntity.prototype.url = function() {
+		return "http" + (this.secure ? "s" : "") + "://" + this.domain + this.path;
+	};
+	return _CookieEntity;
+})();
+
+var CookieCollection = (function() {
+	/**
+	 * CookieCollection
+	 * @param {CookieCollection} collection
+	 */
+	var _CookieCollection = function(collection) {
+		this.collection = nativeSlice.call(collection);
+	};
 	/**
 	 * Get entity which matches given domain.
 	 * @param {String} domain
 	 */
-	this.get = function(domain) {
+	_CookieCollection.prototype.get = function(domain) {
 		var selectedCookieEntities = [];
 		for(var i = 0, len = this.collection.length;i < len;i++) {
 			cookieEntity = this.collection[i];
@@ -53,7 +60,7 @@ var CookieCollection = function(collection) {
 	 * Remove entity from collection.
 	 * @param {String} domain
 	 */
-	this.remove = function(cookieId) {
+	_CookieCollection.prototype.remove = function(cookieId) {
 		var removeIndex = -1;
 		var cookieEntity = null;
 		for(var i = 0, len = this.collection.length;i < len;i++) {
@@ -67,25 +74,29 @@ var CookieCollection = function(collection) {
 			this.collection.splice(removeIndex, 1);
 		}
 	};
-};
-/**
- * CookieView
- * @{CookieCollection} cookieCollection
- */
-var CookieView = function(cookieCollection) {
-	this.cookieCollection = cookieCollection;
+	return _CookieCollection;
+})();
+
+var CookieView = (function() {
+	/**
+	 * CookieView
+	 * @{CookieCollection} cookieCollection
+	 */
+	var _CookieView = function(cookieCollection) {
+		this.cookieCollection = cookieCollection;
+	};
 	/**
 	 * Generate html string.
 	 * @return {String}
 	 */
-	this.get = function() {
+	_CookieView.prototype.get = function() {
 		var shownDomain = [];
 		var html = "";
 		nativeForEach.call(this.cookieCollection.collection, function(cookieEntity) {
 			if(shownDomain.indexOf(cookieEntity.domain) == -1) {
 				shownDomain.push(cookieEntity.domain);
 				html += 
-					"<tr id='" + cookieEntity.cookieId +  "''>" +
+					"<tr id='" + cookieEntity.cookieId +  "'>" +
 						"<td style='word-break: break-all;'>" + cookieEntity.domain + "</td>" +
 						"<td>" + "<button class='btn' data-cookie-domain='" + cookieEntity.domain + "'>DELETE</button>" + "</td>" +
 					"</tr>";
@@ -94,43 +105,50 @@ var CookieView = function(cookieCollection) {
 		});
 		return html;
 	};
-};
+	return _CookieView;
+})();
+
 /**
  * CookieAccessObject
  */
-var CookieAccessObject = function() {
+var CookieAccessObject = {
 	/**
 	 * Get cookies with GoogleChromeAPI.
 	 * @param {Object} param
 	 * @param {Function} callback
 	 */
-	this.get = function(param, callback) {
+	get: function(param, callback) {
 		chrome.cookies.getAll(param, callback);
-	};
+	},
 	/**
 	 * Remove cookie.
 	 * @param {CookieEntity} entity
 	 * @param {Function} callback
 	 */
-	this.remove = function(entity, callback) {
+	remove: function(entity, callback) {
 		var param = {
 			url: entity.url(),
 			name: entity.name,
 			storeId: entity.storeId
 		};
 		chrome.cookies.remove(param, callback);
-	};
+	}
 };
 
-var _cookieId = 0;
-function generateUniqueId() {
-	return ++_cookieId;
-};
+/**
+ * Get unique id.
+ * @return {Number}
+ */
+var generateUniqueId = (function() {
+	var _cookieId = 0;
+	return function() {
+		++_cookieId;
+	};
+})();
 
 var container = null;
 var alert = null;
 var search = null;
-var cookieAccessObject = new CookieAccessObject();
 
 var cookieView = null;
 var cookieCollection = null;
@@ -139,7 +157,7 @@ var cookieCollection = null;
 $(document).ready(function() {
 	container = $("#cookie-list");
 	alert = $("#alert");
-	cookieAccessObject.get({}, function(cookies) {
+	CookieAccessObject.get({}, function(cookies) {
 		var cookieArray = [];
 		nativeForEach.call(cookies, function(cookie) {
 			cookieArray.push(new CookieEntity(cookie));
@@ -158,11 +176,11 @@ $(document).ready(function() {
 
 	//remove cookies related with domain
 	nativeForEach.call(clickedCookieEntityArray, function(clickedCookieEntity) {
-		cookieAccessObject.remove(clickedCookieEntity, function(details) {
+		CookieAccessObject.remove(clickedCookieEntity, function(details) {
 			console.log(details);
 		});
 	});
-	alert.html("cookie of " + clickedDomain + " has been removed successfilly.");
+	alert.html(clickedDomain + " cookies have been removed successfully.");
 });
 
-
+})();
