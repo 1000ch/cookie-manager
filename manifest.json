@@ -7,6 +7,6 @@
 	"browser_action": {
 		"default_icon": "/src/img/trash.ico",
 		"default_title": "CookieManager",
-		"default_popup": "/src/html/list.html"
+		"default_popup": "/src/html/popup.html"
 	}
 }
