@@ -107,12 +107,12 @@ var CookieView = (function() {
 			if(shownDomain.indexOf(cookieEntity.domain) == -1) {
 				shownDomain.push(cookieEntity.domain);
 				html += 
-					"<tr id='" + cookieEntity.domain +  "'>" +
+					"<tr data-cookie-domain='" + cookieEntity.domain +  "'>" +
 						"<td style='word-break: break-all;'>" + 
 							cookieEntity.domain + 
 						"</td>" +
 						"<td>" + 
-							"<button class='btn' data-cookie-domain='" + cookieEntity.domain + "'>DELETE</button>" + 
+							"<button class='btn btn-block' data-cookie-domain='" + cookieEntity.domain + "'>DELETE</button>" + 
 						"</td>" +
 					"</tr>";
 			}
@@ -160,7 +160,9 @@ var cookieCollection = null;
 //when document is ready, call init
 $(document).ready(function() {
 	container = $("#cookie-list");
-	alert = $("#alert");
+	alert = $("#alert").hide();
+	search = $("#search");
+
 	CookieAccessObject.get({}, function(cookies) {
 		var cookieArray = [];
 		nativeForEach.call(cookies, function(cookie) {
@@ -170,21 +172,40 @@ $(document).ready(function() {
 		cookieView = new CookieView(cookieCollection);
 		container.append(cookieView.get());
 	});
-}).on("click", ".btn", function() {
-	var btn = $(this);
-	var clickedDomain = btn.attr("data-cookie-domain");
-	var clickedCookieEntityArray = cookieCollection.get(clickedDomain);
 
-	//remove row
-	btn.parents("tr").remove();
+	container.on("mouseover", ".btn", function() {
+		$(this).addClass("btn-danger");
+	}).on("mouseout", ".btn", function() {
+		$(this).removeClass("btn-danger");
+	}).on("click", ".btn", function() {
+		var btn = $(this);
+		var clickedDomain = btn.attr("data-cookie-domain");
+		var relatedCookies = cookieCollection.get(clickedDomain);
 
-	//remove cookies related with domain
-	clickedCookieEntityArray.forEach(function(clickedCookieEntity) {
-		CookieAccessObject.remove(clickedCookieEntity, function(details) {
-			console.log(details);
+		//remove row
+		btn.parents("tr").remove();
+
+		//remove cookies related with domain
+		relatedCookies.forEach(function(relatedCookie) {
+			CookieAccessObject.remove(relatedCookie, function(details) {
+				console.log(details);
+			});
+		});
+		alert.html(clickedDomain + " cookies have been removed successfully.");
+	});
+
+	search.on("keyup", function() {
+		var word = $(this).val();
+		var rows = container.find("tr");
+		rows.each(function() {
+			var domain = this.getAttribute("data-cookie-domain") + "";
+			if(domain.indexOf(word) == -1) {
+				$(this).hide();
+			} else {
+				$(this).show();
+			}
 		});
 	});
-	alert.html(clickedDomain + " cookies have been removed successfully.");
 });
 
 })();
