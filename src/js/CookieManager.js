@@ -10,6 +10,17 @@
 var nativeForEach = [].forEach;
 var nativeSlice = [].slice;
 
+/**
+ * Get unique id.
+ * @return {Number}
+ */
+var generateUniqueId = (function() {
+	var _cookieId = 0;
+	return function() {
+		++_cookieId;
+	};
+})();
+
 var CookieEntity = (function() {
 	/**
 	 * CookieEntity
@@ -138,17 +149,6 @@ var CookieAccessObject = {
 		chrome.cookies.remove(param, callback);
 	}
 };
-
-/**
- * Get unique id.
- * @return {Number}
- */
-var generateUniqueId = (function() {
-	var _cookieId = 0;
-	return function() {
-		++_cookieId;
-	};
-})();
 
 var container = null;
 var alert = null;
