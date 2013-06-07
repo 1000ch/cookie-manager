@@ -143,7 +143,9 @@ var CookieView = (function() {
 							cookieEntity.domain + 
 						"</td>" +
 						"<td>" + 
-							"<button class='btn btn-block' data-cookie-domain='" + cookieEntity.domain + "'>DELETE</button>" + 
+							"<button class='btn btn-block' data-cookie-domain='" + cookieEntity.domain + "'>" + 
+								"<i class='icon-remove'></i> DELETE" + 
+							"</button>" + 
 						"</td>" +
 					"</tr>";
 			}
@@ -183,6 +185,7 @@ var CookieAccessObject = {
 
 var container = null;
 var alert = null;
+var alertText = null;
 var search = null;
 
 var cookieView = null;
@@ -191,7 +194,6 @@ var cookieCollection = null;
 //when document is ready, call init
 $(document).ready(function() {
 	container = $("#cookie-list");
-	alert = $("#alert").hide();
 	search = $("#search");
 
 	CookieAccessObject.get({}, function(cookies) {
@@ -222,7 +224,6 @@ $(document).ready(function() {
 				console.log(details);
 			});
 		});
-		alert.html(clickedDomain + " cookies have been removed successfully.");
 	});
 
 	search.on("keyup", throttle(function() {
