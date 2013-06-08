@@ -89,14 +89,14 @@ var CookieCollection = (function() {
 	 * @param {String} domain
 	 */
 	_CookieCollection.prototype.get = function(domain) {
-		var selectedCookieEntities = [];
+		var cookieEntities = [];
 		for(var i = 0, len = this.collection.length;i < len;i++) {
 			cookieEntity = this.collection[i];
 			if(cookieEntity.domain == domain) {
-				selectedCookieEntities.push(cookieEntity);
+				cookieEntities.push(cookieEntity);
 			}
 		}
-		return selectedCookieEntities;
+		return cookieEntities;
 	};
 	/**
 	 * Remove entity from collection.
