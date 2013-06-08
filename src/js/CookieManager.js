@@ -73,6 +73,13 @@ var CookieEntity = (function() {
 	_CookieEntity.prototype.url = function() {
 		return "http" + (this.secure ? "s" : "") + "://" + this.domain + this.path;
 	};
+	_CookieEntity.prototype.completedDomain = function() {
+		var completedDomain = this.domain + "";
+		if(completedDomain.length && completedDomain.substring(0, 1) == ".") {
+			completedDomain = "*" + completedDomain;
+		}
+		return completedDomain;
+	};
 	return _CookieEntity;
 })();
 
@@ -134,20 +141,18 @@ var CookieView = (function() {
 	_CookieView.prototype.get = function() {
 		var shownDomain = [];
 		var html = "";
+		var domain = "";
 		this.cookieCollection.collection.forEach(function(cookieEntity) {
-			if(shownDomain.indexOf(cookieEntity.domain) == -1) {
-				shownDomain.push(cookieEntity.domain);
+			domain = cookieEntity.domain;
+			if(shownDomain.indexOf(domain) == -1) {
+				shownDomain.push(domain);
 				html += 
-					"<tr data-cookie-domain='" + cookieEntity.domain +  "'>" +
-						"<td style='word-break: break-all;'>" + 
-							cookieEntity.domain + 
-						"</td>" +
-						"<td>" + 
-							"<button class='btn btn-block' data-cookie-domain='" + cookieEntity.domain + "'>" + 
-								"<i class='icon-remove'></i> DELETE" + 
-							"</button>" + 
-						"</td>" +
-					"</tr>";
+					"<li data-domain='" + domain +  "'>" +
+						"<a href='" + cookieEntity.url() + "' target='_blank' class='breakAll'>" + cookieEntity.completedDomain() + "</a>" +
+						"<button class='btn' data-domain='" + cookieEntity.domain + "'>" + 
+							"<i class='icon-remove'></i> DELETE" + 
+						"</button>" + 
+					"</li>";
 			}
 			
 		});
@@ -193,7 +198,7 @@ var cookieCollection = null;
 
 //when document is ready, call init
 $(document).ready(function() {
-	container = $("#cookie-list");
+	container = $("#cookies");
 	search = $("#search");
 
 	CookieAccessObject.get({}, function(cookies) {
@@ -207,16 +212,16 @@ $(document).ready(function() {
 	});
 
 	container.on("mouseover", ".btn", function() {
-		$(this).addClass("btn-danger");
+		$(this).addClass("btn-danger").parent("li").addClass("active");
 	}).on("mouseout", ".btn", function() {
-		$(this).removeClass("btn-danger");
+		$(this).removeClass("btn-danger").parent("li").removeClass("active");
 	}).on("click", ".btn", function() {
 		var btn = $(this);
-		var clickedDomain = btn.attr("data-cookie-domain");
+		var clickedDomain = btn.attr("data-domain");
 		var relatedCookies = cookieCollection.get(clickedDomain);
 
 		//remove row
-		btn.parents("tr").remove();
+		btn.parent("li").remove();
 
 		//remove cookies related with domain
 		relatedCookies.forEach(function(relatedCookie) {
@@ -228,16 +233,18 @@ $(document).ready(function() {
 
 	search.on("keyup", throttle(function() {
 		var word = $(this).val();
-		var rows = container.find("tr");
-		rows.each(function() {
-			var domain = this.getAttribute("data-cookie-domain") + "";
+		var row, domain;
+		var rows = container.find("li");
+		for(var i = 0, len = rows.length;i < len;i++) {
+			row = rows[i];
+			domain = row.getAttribute("data-domain") + "";
 			if(domain.indexOf(word) == -1) {
-				$(this).hide();
+				$(row).hide();
 			} else {
-				$(this).show();
+				$(row).show();
 			}
-		});
-	}, 500));
+		}
+	}, 1000));
 });
 
 })();
