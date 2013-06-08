@@ -196,6 +196,25 @@ var search = null;
 var cookieView = null;
 var cookieCollection = null;
 
+function bindEventHandler() {
+	container.on("mouseover", ".btn", function() {
+		$(this).addClass("btn-danger").parent("li").addClass("active");
+	}).on("mouseout", ".btn", function() {
+		$(this).removeClass("btn-danger").parent("li").removeClass("active");
+	});
+}
+
+function unbindEventHandler() {
+	container.off("mouseover", ".btn").off("mouseout", ".btn");
+}
+
+function refreshEventBinding() {
+	window.requestAnimationFrame(refreshEventBinding);
+
+	unbindEventHandler();
+	bindEventHandler();
+}
+
 //when document is ready, call init
 $(document).ready(function() {
 	container = $("#cookies");
@@ -211,11 +230,7 @@ $(document).ready(function() {
 		container.append(cookieView.get());
 	});
 
-	container.on("mouseover", ".btn", function() {
-		$(this).addClass("btn-danger").parent("li").addClass("active");
-	}).on("mouseout", ".btn", function() {
-		$(this).removeClass("btn-danger").parent("li").removeClass("active");
-	}).on("click", ".btn", function() {
+	container.on("click", ".btn", function() {
 		var btn = $(this);
 		var clickedDomain = btn.attr("data-domain");
 		var relatedCookies = cookieCollection.get(clickedDomain);
@@ -230,6 +245,9 @@ $(document).ready(function() {
 			});
 		});
 	});
+
+	//setup mouseover/mouseout events
+	window.requestAnimationFrame(refreshEventBinding);
 
 	search.on("keyup", throttle(function() {
 		var word = $(this).val();
