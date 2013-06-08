@@ -149,7 +149,7 @@ var CookieView = (function() {
 				html += 
 					"<li data-domain='" + domain +  "'>" +
 						"<a href='" + cookieEntity.url() + "' target='_blank' class='breakAll'>" + cookieEntity.completedDomain() + "</a>" +
-						"<button class='btn' data-domain='" + cookieEntity.domain + "'>" + 
+						"<button class='btn' data-domain='" + domain + "'>" + 
 							"<i class='icon-remove'></i> DELETE" + 
 						"</button>" + 
 					"</li>";
