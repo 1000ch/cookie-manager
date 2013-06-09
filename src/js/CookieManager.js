@@ -22,7 +22,7 @@ var generateUniqueId = (function() {
 })();
 
 /**
- * throttle 
+ * Throttle 
  * @description borrowed from UnderscoreJS
  * @param {Function} func
  * @param {Number} wait
@@ -166,25 +166,40 @@ var CookieView = (function() {
  */
 var CookieAccessObject = {
 	/**
-	 * Get cookies with GoogleChromeAPI.
-	 * @param {Object} param
+	 * Get cookie
+	 * @param {Object} details
 	 * @param {Function} callback
 	 */
-	get: function(param, callback) {
-		chrome.cookies.getAll(param, callback);
+	get: function(details, callback) {
+		chrome.cookies.get(details, callback);
 	},
 	/**
-	 * Remove cookie.
+	 * Get cookies
+	 * @param {Object} details
+	 * @param {Function} callback
+	 */
+	getAll: function(details, callback) {
+		chrome.cookies.getAll(details, callback);
+	},
+	/**
+	 * Set cookie
+	 * @param {Object} details
+	 * @param {Function} callback
+	 */
+	set: function(details, callback) {
+		chrome.cookies.set(details, callback);
+	},
+	/**
+	 * Remove cookie
 	 * @param {CookieEntity} entity
 	 * @param {Function} callback
 	 */
 	remove: function(entity, callback) {
-		var param = {
+		chrome.cookies.remove({
 			url: entity.url(),
 			name: entity.name,
 			storeId: entity.storeId
-		};
-		chrome.cookies.remove(param, callback);
+		}, callback);
 	}
 };
 
@@ -220,7 +235,7 @@ $(document).ready(function() {
 	container = $("#cookies");
 	search = $("#search");
 
-	CookieAccessObject.get({}, function(cookies) {
+	CookieAccessObject.getAll({}, function(cookies) {
 		var cookieArray = [];
 		nativeForEach.call(cookies, function(cookie) {
 			cookieArray.push(new CookieEntity(cookie));
