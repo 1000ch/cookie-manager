@@ -25,9 +25,9 @@ Domain list will be filtered when you put any characters.
 
 Coming soon...
 
-## Problem ?
+## Problem?
 
-Please report [here](https://github.com/1000ch/CookieManager/issues).  
+Please report [issues](https://github.com/1000ch/CookieManager/issues).  
 
 ## Lisence
 
