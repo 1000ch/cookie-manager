@@ -3,6 +3,15 @@
 ## About
 
 This is google chrome extension for cookie management.  
+(Currently, you can remove only.)  
+
+## Usage
+
+When you open CookieManager window,  
+you can confirm cookies which your browser contains.  
+
+If you click `DELETE` button,  
+cookies related with shown domain are removed.  
 
 ## Lisence
 
