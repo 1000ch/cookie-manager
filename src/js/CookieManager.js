@@ -12,7 +12,7 @@ var nativeSlice = [].slice;
 
 /**
  * Get unique id.
- * @return {Number}
+ * @returns {Number}
  */
 var generateUniqueId = (function() {
 	var _cookieId = 0;
@@ -26,6 +26,7 @@ var generateUniqueId = (function() {
  * @description borrowed from UnderscoreJS
  * @param {Function} func
  * @param {Number} wait
+ * @returns {Function}
  */
 function throttle(fn, wait) {
 	var context, args, timeout, result;
@@ -70,9 +71,17 @@ var CookieEntity = (function() {
 		this.expirationDate = cookie.expirationDate;
 		this.storeId = cookie.storeId;
 	};
+	/**
+	 * get completed url
+	 * @returns {String}
+	 */
 	_CookieEntity.prototype.url = function() {
 		return "http" + (this.secure ? "s" : "") + "://" + this.domain + this.path;
 	};
+	/**
+	 * get completed domain
+	 * @returns {String}
+	 */
 	_CookieEntity.prototype.completedDomain = function() {
 		var completedDomain = this.domain + "";
 		if(completedDomain.length && completedDomain.substring(0, 1) == ".") {
@@ -94,6 +103,7 @@ var CookieCollection = (function() {
 	/**
 	 * Get entity which matches given domain.
 	 * @param {String} domain
+	 * @returns {Array}
 	 */
 	_CookieCollection.prototype.get = function(domain) {
 		var cookieEntities = [];
@@ -136,7 +146,7 @@ var CookieView = (function() {
 	};
 	/**
 	 * Generate html string.
-	 * @return {String}
+	 * @returns {String}
 	 */
 	_CookieView.prototype.get = function() {
 		var shownDomain = [];
@@ -206,13 +216,14 @@ var CookieAccessObject = {
 };
 
 var container = null;
-var alert = null;
-var alertText = null;
 var search = null;
 
 var cookieView = null;
 var cookieCollection = null;
 
+/**
+ * delegate button hover event
+ */
 function bindEventHandler() {
 	container.on("mouseover", ".btn", function() {
 		$(this).addClass("btn-danger").parent("li").addClass("active");
@@ -221,22 +232,33 @@ function bindEventHandler() {
 	});
 }
 
+/**
+ * undelegate button hover event
+ */
 function unbindEventHandler() {
 	container.off("mouseover", ".btn").off("mouseout", ".btn");
 }
 
-function refreshEventBinding() {
-	window.requestAnimationFrame(refreshEventBinding);
-
-	unbindEventHandler();
-	bindEventHandler();
-}
+var scrollTimerId = null;
+window.addEventListener("scroll", function() {
+	if(!scrollTimerId) {
+		unbindEventHandler();
+	} else {
+		window.clearTimeout(scrollTimerId);
+	}
+	scrollTimerId = window.setTimeout(function() {
+		scrollTimerId = null;
+		bindEventHandler();
+	}, 300);
+})
 
 //when document is ready, call init
 $(document).ready(function() {
+	//cache elements
 	container = $("#cookies");
 	search = $("#search");
 
+	//get all cookies
 	CookieAccessObject.getAll({}, function(cookies) {
 		var cookieArray = [];
 		nativeForEach.call(cookies, function(cookie) {
@@ -247,6 +269,8 @@ $(document).ready(function() {
 		container.append(cookieView.get());
 	});
 
+
+	//bind event to container
 	container.on("click", ".btn", function() {
 		var btn = $(this);
 		var clickedDomain = btn.attr("data-domain");
@@ -263,8 +287,7 @@ $(document).ready(function() {
 		});
 	});
 
-	//setup mouseover/mouseout events
-	window.requestAnimationFrame(refreshEventBinding);
+	bindEventHandler();
 
 	search.on("keyup", throttle(function() {
 		var word = $(this).val();
