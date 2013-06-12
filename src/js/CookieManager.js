@@ -174,9 +174,9 @@ var CookieView = (function() {
 })();
 
 /**
- * CookieAccessObject
+ * CookieAccess
  */
-var CookieAccessObject = {
+var CookieAccess = {
 	/**
 	 * Get cookie
 	 * @param {Object} details
@@ -259,7 +259,7 @@ $(document).ready(function() {
 	search = $("#search");
 
 	//get all cookies
-	CookieAccessObject.getAll({}, function(cookies) {
+	CookieAccess.getAll({}, function(cookies) {
 		var cookieArray = [];
 		nativeForEach.call(cookies, function(cookie) {
 			cookieArray.push(new CookieEntity(cookie));
@@ -281,7 +281,7 @@ $(document).ready(function() {
 
 		//remove cookies related with domain
 		relatedCookies.forEach(function(relatedCookie) {
-			CookieAccessObject.remove(relatedCookie, function(details) {
+			CookieAccess.remove(relatedCookie, function(details) {
 				console.log(details);
 			});
 		});
