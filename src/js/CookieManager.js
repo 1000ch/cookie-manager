@@ -225,10 +225,11 @@ var cookieCollection = null;
  * delegate button hover event
  */
 function bindEventHandler() {
+	container.addClass("has-hover");
 	container.on("mouseover", ".btn", function() {
-		$(this).addClass("btn-danger").parent("li").addClass("active");
+		$(this).addClass("btn-danger");
 	}).on("mouseout", ".btn", function() {
-		$(this).removeClass("btn-danger").parent("li").removeClass("active");
+		$(this).removeClass("btn-danger");
 	});
 }
 
@@ -236,6 +237,7 @@ function bindEventHandler() {
  * undelegate button hover event
  */
 function unbindEventHandler() {
+	container.removeClass("has-hover");
 	container.off("mouseover", ".btn").off("mouseout", ".btn");
 }
 

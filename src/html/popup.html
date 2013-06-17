@@ -24,15 +24,15 @@
 				overflow: hidden;
 				white-space: nowrap;
 			}
-			.cookies li.active a {
-				background-color: #ddd;
-			}
 			.cookies .btn {
 				position: absolute;
 				top: 4px;
 				right: 4px;
 			}
-			.cookies a:hover {
+			.cookies.has-hover li:hover a {
+				background-color: #ddd;
+			}
+			.cookies.has-hover a:hover {
 				color: #fff;
 				background-color: #0088cc !important;
 			}
@@ -53,7 +53,7 @@
 		<div class="row">
 			<article class="span6">
 				<section>
-					<ul id="cookies" class="cookies nav nav-tabs nav-stacked"></ul>
+					<ul id="cookies" class="cookies has-hover nav nav-tabs nav-stacked"></ul>
 				</section>
 			</article>
 		</div>
