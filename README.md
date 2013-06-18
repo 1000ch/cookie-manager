@@ -31,10 +31,11 @@ Please report [issues](https://github.com/1000ch/CookieManager/issues).
 
 ## Lisence
 
+Copyright 1000ch  
+
 This extension is made with following resource.  
-And others are MIT Lisence.  
+These lisence equivalent distribution.  
+Other resources are lisenced under the GPL Lisence version 3.  
 
 + [Twitter Bootstrap](http://twitter.github.io/bootstrap/)
 + [IcoMoon Icon Packs Free Version](http://icomoon.io/#preview-free)
-
-Copyright (c) 1000ch.net  
