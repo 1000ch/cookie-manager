@@ -274,12 +274,13 @@ $(document).ready(function() {
 
 	//bind event to container
 	container.on("click", ".btn", function() {
-		var btn = $(this);
-		var clickedDomain = btn.attr("data-domain");
+		var clickedDomain = this.getAttribute("data-domain");
 		var relatedCookies = cookieCollection.get(clickedDomain);
 
 		//remove row
-		btn.parent("li").remove();
+		$(this).parent("li").fadeOut(function() {
+			$(this).remove();
+		});
 
 		//remove cookies related with domain
 		relatedCookies.forEach(function(relatedCookie) {
