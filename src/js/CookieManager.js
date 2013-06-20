@@ -226,11 +226,6 @@ var cookieCollection = null;
  */
 function bindEventHandler() {
 	container.addClass("has-hover");
-	container.on("mouseover", ".btn", function() {
-		$(this).addClass("btn-danger");
-	}).on("mouseout", ".btn", function() {
-		$(this).removeClass("btn-danger");
-	});
 }
 
 /**
@@ -238,7 +233,6 @@ function bindEventHandler() {
  */
 function unbindEventHandler() {
 	container.removeClass("has-hover");
-	container.off("mouseover", ".btn").off("mouseout", ".btn");
 }
 
 var scrollTimerId = null;
