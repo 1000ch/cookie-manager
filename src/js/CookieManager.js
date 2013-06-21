@@ -95,7 +95,7 @@ var CookieEntity = (function() {
 var CookieCollection = (function() {
 	/**
 	 * CookieCollection
-	 * @param {CookieCollection} collection
+	 * @param {Array<CookieEntity>} collection
 	 */
 	var _CookieCollection = function(collection) {
 		this.collection = nativeSlice.call(collection);
@@ -133,6 +133,11 @@ var CookieCollection = (function() {
 			this.collection.splice(removeIndex, 1);
 		}
 	};
+	_CookieCollection.prototype.each = function(callback) {
+		for(var i = 0, len = this.collection.length;i < len;i++) {
+			callback(this.collection[i], i, this.collection);
+		}
+	};
 	return _CookieCollection;
 })();
 
@@ -161,7 +166,7 @@ var CookieView = (function() {
 						"<a href='" + cookieEntity.url() + "' target='_blank'>" + 
 							cookieEntity.completedDomain() + 
 						"</a>" +
-						"<button class='btn' data-domain='" + domain + "'>" + 
+						"<button class='btn js-delete' data-domain='" + domain + "'>" + 
 							"<i class='icon-remove'></i> DELETE" + 
 						"</button>" + 
 					"</li>";
@@ -251,8 +256,8 @@ window.addEventListener("scroll", function() {
 //when document is ready, call init
 $(document).ready(function() {
 	//cache elements
-	container = $("#cookies");
-	search = $("#search");
+	container = $("#js-cookies");
+	search = $("#js-search");
 
 	//get all cookies
 	CookieAccess.getAll({}, function(cookies) {
@@ -267,7 +272,7 @@ $(document).ready(function() {
 
 
 	//bind event to container
-	container.on("click", ".btn", function() {
+	container.on("click", ".js-delete", function() {
 		var clickedDomain = this.getAttribute("data-domain");
 		var relatedCookies = cookieCollection.get(clickedDomain);
 
@@ -282,6 +287,17 @@ $(document).ready(function() {
 				console.log(details);
 			});
 		});
+	});
+
+	$("#js-delete-all").on("click", function() {
+		cookieCollection.each(function(cookieEntity, index, cookieCollection) {
+			CookieAccess.remove(cookieEntity, function(details) {
+				console.log(details);
+			});
+		});
+		cookieCollection = new CookieCollection([]);
+		cookieView = new CookieView(cookieCollection);
+		container.append(cookieView.get());
 	});
 
 	bindEventHandler();
