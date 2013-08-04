@@ -1,3 +1,5 @@
+#library("CookieEntity");
+
 class CookieEntity implements ICookieEntity {
 	int cookieId;
 	String name;
@@ -16,7 +18,7 @@ class CookieEntity implements ICookieEntity {
 	 * @param Object
 	 */
 	CookieEntity(Object cookie) {
-		this.cookieId = generateUniqueId();
+		this.cookieId = publishUniqueId();
 		this.name = cookie.name as String;
 		this.value = cookie.value as String;
 		this.domain = cookie.domain as String;
@@ -27,6 +29,11 @@ class CookieEntity implements ICookieEntity {
 		this.session = cookie.session;
 		this.expirationDate = new DateTime.fromMillisecondsSinceEpoch(cookie.expirationDate, isUtc: true);
 		this.storeId = cookie.storeId;
+	}
+
+	int uniqueId = 0;
+	int publishUniqueId() {
+		return ++uniqueId;
 	}
 
 	/**

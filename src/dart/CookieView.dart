@@ -1,3 +1,6 @@
+#library("CookieView");
+#import("CookieEntity.dart");
+
 class CookieView implements ICookieView {
 	List<CookieEntity> cookieEntityList;
 	CookieView(List<CookieEntity> cookieEntityList) {
