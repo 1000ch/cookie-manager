@@ -239,7 +239,7 @@
       scrollTimerId = null;
       bindEventHandler();
     }, 300);
-  })
+  });
 
   //when document is ready, call init
   $(document).ready(function() {
