@@ -8,6 +8,7 @@
   //cache
   var nativeForEach = [].forEach;
   var nativeSlice = [].slice;
+  var nativeSplice = [].splice;
 
   /**
    * Get unique id.
@@ -22,33 +23,18 @@
 
   /**
    * Throttle
-   * @description borrowed from UnderscoreJS
    * @param {Function} func
-   * @param {Number} wait
+   * @param {Number} delay
    * @returns {Function}
    */
-  function throttle(fn, wait) {
-    var context, args, timeout, result;
-    var previous = 0;
-    var later = function() {
-      previous = new Date;
-      timeout = null;
-      result = fn.apply(context, args);
-    };
+  function throttle(fn, delay) {
+    var timer = null;
     return function() {
-      var now = new Date;
-      var remaining = wait - (now - previous);
-      context = this;
-      args = arguments;
-      if (remaining <= 0) {
-        clearTimeout(timeout);
-        timeout = null;
-        previous = now;
-        result = fn.apply(context, args);
-      } else if (!timeout) {
-        timeout = setTimeout(later, remaining);
-      }
-      return result;
+      var context = this, args = arguments;
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        fn.apply(context, args);
+      }, delay);
     };
   }
 
@@ -97,7 +83,10 @@
      * @param {Array<CookieEntity>} collection
      */
     var _CookieCollection = function(collection) {
-      this.collection = nativeSlice.call(collection);
+      this.length = collection.length;
+      for(var i = 0, len = collection.length;i < len;i++) {
+        this[i] = collection[i];
+      }
     };
     /**
      * Get entity which matches given domain.
@@ -106,8 +95,8 @@
      */
     _CookieCollection.prototype.get = function(domain) {
       var cookieEntities = [];
-      for(var i = 0, len = this.collection.length;i < len;i++) {
-        cookieEntity = this.collection[i];
+      for(var i = 0, len = this.length;i < len;i++) {
+        cookieEntity = this[i];
         if(cookieEntity.domain == domain) {
           cookieEntities.push(cookieEntity);
         }
@@ -121,20 +110,20 @@
     _CookieCollection.prototype.remove = function(cookieId) {
       var removeIndex = -1;
       var cookieEntity = null;
-      for(var i = 0, len = this.collection.length;i < len;i++) {
-        cookieEntity = this.collection[i];
+      for(var i = 0, len = this.length;i < len;i++) {
+        cookieEntity = this[i];
         if(cookieEntity.cookieId == cookieId) {
           removeIndex = i;
           break;
         }
       }
       if(removeIndex != -1) {
-        this.collection.splice(removeIndex, 1);
+        nativeSplice.call(this, removeIndex, 1);
       }
     };
     _CookieCollection.prototype.each = function(callback) {
-      for(var i = 0, len = this.collection.length;i < len;i++) {
-        callback(this.collection[i], i, this.collection);
+      for(var i = 0, len = this.length;i < len;i++) {
+        callback(this[i], i, this);
       }
     };
     return _CookieCollection;
@@ -156,19 +145,19 @@
       var shownDomain = [];
       var html = "";
       var domain = "";
-      this.cookieCollection.collection.forEach(function(cookieEntity) {
+      nativeForEach.call(this.cookieCollection, function(cookieEntity) {
         domain = cookieEntity.domain;
         if(shownDomain.indexOf(domain) == -1) {
           shownDomain.push(domain);
           html +=
             "<li data-domain='" + domain +  "'>" +
               "<a href='" + cookieEntity.url() + "' target='_blank'>" +
-              cookieEntity.completedDomain() +
+                cookieEntity.completedDomain() +
+                "<button class='btn btn-info pull-right js-delete' data-domain='" + domain + "'>" +
+                  "<i class='glyphicon glyphicon-remove'></i> DELETE" +
+                "</button>" + 
               "</a>" +
-              "<button class='btn js-delete' data-domain='" + domain + "'>" +
-              "<i class='glyphicon glyphicon-remove'></i> DELETE" +
-              "</button>" +
-              "</li>";
+            "</li>";
         }
 
       });
@@ -219,8 +208,8 @@
     }
   };
 
-  var container = null;
-  var search = null;
+  var $container = null;
+  var $search = null;
 
   var cookieView = null;
   var cookieCollection = null;
@@ -229,14 +218,14 @@
    * delegate button hover event
    */
   function bindEventHandler() {
-    container.addClass("has-hover");
+    $container.addClass("has-hover");
   }
 
   /**
    * undelegate button hover event
    */
   function unbindEventHandler() {
-    container.removeClass("has-hover");
+    $container.removeClass("has-hover");
   }
 
   var scrollTimerId = null;
@@ -255,8 +244,8 @@
   //when document is ready, call init
   $(document).ready(function() {
     //cache elements
-    container = $("#js-cookies");
-    search = $("#js-search");
+    $container = $("#js-cookies");
+    $search = $("#js-search");
 
     //get all cookies
     CookieAccess.getAll({}, function(cookies) {
@@ -266,18 +255,22 @@
       });
       cookieCollection = new CookieCollection(cookieArray);
       cookieView = new CookieView(cookieCollection);
-      container.append(cookieView.get());
+      $container.append(cookieView.get());
     });
 
+    $container.on("click", "a", function(e) {
+      e.preventDefault();
+    });
 
-    //bind event to container
-    container.on("click", ".js-delete", function() {
+    //bind event to $container
+    $container.on("click", ".js-delete", function(e) {
       var clickedDomain = this.getAttribute("data-domain");
       var relatedCookies = cookieCollection.get(clickedDomain);
 
       //remove row
-      $(this).parent("li").fadeOut(function() {
-        $(this).remove();
+      var $li = $(this).closest("li");
+      $li.fadeOut("fast", function() {
+        $li.remove();
       });
 
       //remove cookies related with domain
@@ -288,30 +281,19 @@
       });
     });
 
-    $("#js-delete-all").on("click", function() {
-      cookieCollection.each(function(cookieEntity, index, cookieCollection) {
-        CookieAccess.remove(cookieEntity, function(details) {
-          console.log(details);
-        });
-      });
-      cookieCollection = new CookieCollection([]);
-      cookieView = new CookieView(cookieCollection);
-      container.append(cookieView.get());
-    });
-
     bindEventHandler();
 
-    search.on("keyup", throttle(function() {
+    $search.on("keyup", throttle(function() {
       var word = $(this).val();
       var row, domain;
-      var rows = container.find("li");
+      var rows = $container.find("li");
       for(var i = 0, len = rows.length;i < len;i++) {
         row = rows[i];
-        domain = row.getAttribute("data-domain") + "";
-        if(domain.indexOf(word) == -1) {
-          $(row).hide();
+        domain = row.getAttribute("data-domain");
+        if(domain.indexOf(word) === -1) {
+          row.classList.add("none");
         } else {
-          $(row).show();
+          row.classList.remove("none");
         }
       }
     }, 1000));

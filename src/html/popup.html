@@ -2,65 +2,49 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
     <title>CookieManager</title>
     <link rel="stylesheet" href="/src/css/bootstrap.css">
     <style>
-			/* cascading */
-			body { 
-				padding: 70px 10px;
-			}
-			.cookies li {
-				position: relative;
-			}
-			.cookies a {
-				word-break: break-all;
-				overflow: hidden;
-				white-space: nowrap;
-			}
-			.cookies .btn {
-				position: absolute;
-				top: 3px;
-				right: 3px;
-			}
-			.cookies.has-hover li:hover a {
-				background-color: #ddd;
-			}
-			.cookies.has-hover a:hover {
-				color: #fff;
-				background-color: #0088cc !important;
-			}
-			.cookies.has-hover .btn:hover {
-				color: #ffffff;
-				text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-				background-color: #da4f49;
-				*background-color: #bd362f;
-				background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
-				background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
-				background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
-				background-repeat: repeat-x;
-				border-color: #bd362f #bd362f #802420;
-				border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-			}
+      body {
+        min-width: 480px;
+        padding: 70px 0 100px;
+        font-size: 20px;
+      }
+      footer {
+        padding: 0 15px;
+      }
+      .cookies a {
+        word-break: break-all;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .cookies.has-hover .btn:hover {
+        color: #ffffff;
+        background-color: #d9534f;
+        border-color: #d43f3a;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+      }
+      .none {
+        display: none !important;
+      }
     </style>
   </head>
   <body>
-    <header class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="navbar-header">
+    <div class="container">
+      <header class="navbar navbar-default navbar-fixed-top" role="navigation">
         <a class="navbar-brand" href="#">CookieManager</a>
-        <form class="navbar-form navbar-left" role="search">
-        <div class="input-group navbar-right">
-          <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-          <input type="text" id="js-search" class="form-control" placeholder="Search domain...">
-        </div>
-          </form>
-      </div>
-    </header>
-    <div class="row">
-      <div class="col-md-6">
-        <ul id="js-cookies" class="cookies has-hover nav nav-stacked"></ul>
-      </div>
+      </header>
+      <ul id="js-cookies" class="cookies has-hover nav nav-pills nav-stacked"></ul>
+      <footer class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+        <form class="navbar-form">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+            <input type="text" id="js-search" class="form-control input-lg" placeholder="Search domain...">
+          </div>
+        </form>
+      </footer>
     </div>
-    <footer class="navbar navbar-default navbar-fixed-bottom" role="navigation"></footer>
     <script src="/src/js/lib/jquery.min.js"></script>
     <script src="/src/js/CookieManager.js"></script>
   </body>
