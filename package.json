@@ -19,8 +19,9 @@
     "url": "https://github.com/1000ch/CookieManager/issues"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": "~0.7.0",
+    "grunt-cli": "~0.1.9",
     "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.7.0",
     "grunt-contrib-watch": "~0.5.3"
   }
 }
