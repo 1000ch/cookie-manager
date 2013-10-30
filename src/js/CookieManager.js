@@ -43,7 +43,7 @@
      * CookieEntity
      * @param {Cookie} cookie
      */
-    var _CookieEntity = function(cookie) {
+    function Entity(cookie) {
       this.cookieId = generateUniqueId();
       this.name = cookie.name;
       this.value = cookie.value;
@@ -55,26 +55,26 @@
       this.session = cookie.session;
       this.expirationDate = cookie.expirationDate;
       this.storeId = cookie.storeId;
-    };
+    }
     /**
      * get completed url
      * @returns {String}
      */
-    _CookieEntity.prototype.url = function() {
+    Entity.prototype.url = function() {
       return "http" + (this.secure ? "s" : "") + "://" + this.domain + this.path;
     };
     /**
      * get completed domain
      * @returns {String}
      */
-    _CookieEntity.prototype.completedDomain = function() {
+    Entity.prototype.completedDomain = function() {
       var completedDomain = this.domain + "";
       if(completedDomain.length && completedDomain.substring(0, 1) == ".") {
         completedDomain = "*" + completedDomain;
       }
       return completedDomain;
     };
-    return _CookieEntity;
+    return Entity;
   })();
 
   var CookieCollection = (function() {
@@ -82,18 +82,18 @@
      * CookieCollection
      * @param {Array<CookieEntity>} collection
      */
-    var _CookieCollection = function(collection) {
+    function Collection(collection) {
       this.length = collection.length;
       for(var i = 0, len = collection.length;i < len;i++) {
         this[i] = collection[i];
       }
-    };
+    }
     /**
      * Get entity which matches given domain.
      * @param {String} domain
      * @returns {Array}
      */
-    _CookieCollection.prototype.get = function(domain) {
+    Collection.prototype.get = function(domain) {
       var cookieEntities = [];
       for(var i = 0, len = this.length;i < len;i++) {
         cookieEntity = this[i];
@@ -107,7 +107,7 @@
      * Remove entity from collection.
      * @param {String} domain
      */
-    _CookieCollection.prototype.remove = function(cookieId) {
+    Collection.prototype.remove = function(cookieId) {
       var removeIndex = -1;
       var cookieEntity = null;
       for(var i = 0, len = this.length;i < len;i++) {
@@ -121,12 +121,12 @@
         nativeSplice.call(this, removeIndex, 1);
       }
     };
-    _CookieCollection.prototype.each = function(callback) {
+    Collection.prototype.each = function(callback) {
       for(var i = 0, len = this.length;i < len;i++) {
         callback(this[i], i, this);
       }
     };
-    return _CookieCollection;
+    return Collection;
   })();
 
   var CookieView = (function() {
@@ -134,14 +134,14 @@
      * CookieView
      * @{CookieCollection} cookieCollection
      */
-    var _CookieView = function(cookieCollection) {
+    function View(cookieCollection) {
       this.cookieCollection = cookieCollection;
-    };
+    }
     /**
      * Generate html string.
      * @returns {String}
      */
-    _CookieView.prototype.get = function() {
+    View.prototype.get = function() {
       var shownDomain = [];
       var html = "";
       var domain = "";
@@ -163,7 +163,7 @@
       });
       return html;
     };
-    return _CookieView;
+    return View;
   })();
 
   /**
