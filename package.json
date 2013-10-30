@@ -1,0 +1,26 @@
+{
+  "name": "CookieManager",
+  "version": "0.2.0",
+  "description": "You can manage browser cookie easily.",
+  "main": "gruntfile.coffee",
+  "scripts": {
+    "test": "grunt jshint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/1000ch/CookieManager.git"
+  },
+  "keywords": [
+    "cookie"
+  ],
+  "author": "1000ch",
+  "license": "GPL v2",
+  "bugs": {
+    "url": "https://github.com/1000ch/CookieManager/issues"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.7.0",
+    "grunt": "~0.4.1",
+    "grunt-contrib-watch": "~0.5.3"
+  }
+}
