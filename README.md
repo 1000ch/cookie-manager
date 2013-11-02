@@ -29,13 +29,13 @@ Coming soon...
 
 Please report [issues](https://github.com/1000ch/CookieManager/issues).  
 
-## Lisence
+## License
 
 Copyright 1000ch  
 
 This extension is made with following resource.  
-These lisence equivalent distribution.  
-Other resources are lisenced under the GPL Lisence version 3.  
+These license equivalent distribution.  
+Other resources are licensed under the GPL License version 3.  
 
 + [Twitter Bootstrap](http://twitter.github.io/bootstrap/)
 + [IcoMoon Icon Packs Free Version](http://icomoon.io/#preview-free)
