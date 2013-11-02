@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "CookieManager",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An easy way to manage your browser cookies.",
   "permissions": [
     "cookies",
