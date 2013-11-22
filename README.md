@@ -1,4 +1,4 @@
-# CookieManager [![Build Status](https://travis-ci.org/1000ch/CookieManager.png?branch=master)](https://travis-ci.org/1000ch/CookieManager)
+# CookieManager [![Build Status](https://travis-ci.org/1000ch/cookie-manager.png?branch=master)](https://travis-ci.org/1000ch/cookie-manager)
 
 ## About
 
