@@ -22,7 +22,7 @@ var CookieView = (function() {
           "<li data-domain='" + domain +  "'>" +
             "<a href='" + cookieEntity.url() + "' target='_blank'>" +
               cookieEntity.completedDomain() +
-              "<button class='btn btn-info pull-right js-delete' data-domain='" + domain + "'>" +
+              "<button class='btn btn-info btn-sm pull-right js-delete' data-domain='" + domain + "'>" +
                 "<i class='glyphicon glyphicon-remove'></i> DELETE" +
               "</button>" +
             "</a>" +
